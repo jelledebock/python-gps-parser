@@ -67,14 +67,18 @@ def gpx_read(gpx_file_path):
                 records.append(record)
     df = pd.DataFrame.from_records(records)
 
+    cols_to_delete = []
     if 'hr' in df.columns:
         df['heart_rate']=df['hr']
+        cols_to_delete.append('hr')
     if 'cad' in df.columns:
         df['cadence']=df['cad']
+        cols_to_delete.append('cad')
     if 'atemp' in df.columns:
         df['temperature']=df['atemp']
+        cols_to_delete.append('atemp')
 
-    df = df.drop(columns=['hr','cad','atemp'])
+    df = df.drop(columns=cols_to_delete)
 
     df.timestamp = pd.to_datetime(df.timestamp)
     df = df.set_index('timestamp', drop=True)
@@ -94,20 +98,27 @@ def tcx_read(tcx_file_path):
         records.append(record)
     df = pd.DataFrame.from_records(records)
     df['timestamp']=df['time']
+    cols_to_delete=['type','time', 'altitudefeet', 'seq','distancemiles','distancekilometers','cadencex2','elapsedtime']
     if 'latitudedegrees' in df.columns:
         df['latitude']=df['latitudedegrees']
+        cols_to_delete.append('latitudedegrees')
     if 'longitudedegrees' in df.columns:
         df['longitude']=df['longitudedegrees']
+        cols_to_delete.append('longitudedegrees')
     if 'altitudemeters' in df.columns:
         df['altitude']=df['altitudemeters']
+        cols_to_delete.append('altitudemeters')
     if 'watts' in df.columns:
         df['power']=df['watts']
+        cols_to_delete.append('watts')
     if 'heartratebpm' in df.columns:
         df['heart_rate']=df['heartratebpm']
+        cols_to_delete.append('heartratebpm')
     if 'distancemeters' in df.columns:
         df['distance']=df['distancemeters']
-    
-    df = df.drop(columns=['type','time', 'distancemeters', 'latitudedegrees','longitudedegrees', 'altitudefeet', 'altitudemeters', 'heartratebpm', 'seq','distancemiles','distancekilometers','cadencex2','elapsedtime','watts'])
+        cols_to_delete.append('distancemeters')
+
+    df = df.drop(columns=cols_to_delete)
     df.timestamp = pd.to_datetime(df.timestamp)
     df = df.set_index('timestamp', drop=True)
     df = df.resample('1s').ffill().bfill()
