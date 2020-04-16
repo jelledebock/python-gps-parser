@@ -66,9 +66,13 @@ def gpx_read(gpx_file_path):
                             record[type_]=value
                 records.append(record)
     df = pd.DataFrame.from_records(records)
-    df['heart_rate']=df['hr']
-    df['cadence']=df['cad']
-    df['temperature']=df['atemp']
+
+    if 'hr' in df.columns:
+        df['heart_rate']=df['hr']
+    if 'cad' in df.columns:
+        df['cadence']=df['cad']
+    if 'atemp' in df.columns:
+        df['temperature']=df['atemp']
 
     df = df.drop(columns=['hr','cad','atemp'])
 
@@ -90,12 +94,18 @@ def tcx_read(tcx_file_path):
         records.append(record)
     df = pd.DataFrame.from_records(records)
     df['timestamp']=df['time']
-    df['latitude']=df['latitudedegrees']
-    df['longitude']=df['longitudedegrees']
-    df['altitude']=df['altitudemeters']
-    df['power']=df['watts']
-    df['heart_rate']=df['heartratebpm']
-    df['distance']=df['distancemeters']
+    if 'latitudedegrees' in df.columns:
+        df['latitude']=df['latitudedegrees']
+    if 'longitudedegrees' in df.columns:
+        df['longitude']=df['longitudedegrees']
+    if 'altitudemeters' in df.columns:
+        df['altitude']=df['altitudemeters']
+    if 'watts' in df.columns:
+        df['power']=df['watts']
+    if 'heartratebpm' in df.columns:
+        df['heart_rate']=df['heartratebpm']
+    if 'distancemeters' in df.columns:
+        df['distance']=df['distancemeters']
     
     df = df.drop(columns=['type','time', 'distancemeters', 'latitudedegrees','longitudedegrees', 'altitudefeet', 'altitudemeters', 'heartratebpm', 'seq','distancemiles','distancekilometers','cadencex2','elapsedtime','watts'])
     df.timestamp = pd.to_datetime(df.timestamp)
