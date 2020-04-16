@@ -66,7 +66,7 @@ def gpx_read(gpx_file_path):
                             record[type_]=value
                 records.append(record)
     df = pd.DataFrame.from_records(records)
-
+    print(df)
     cols_to_delete = []
     if 'hr' in df.columns:
         df['heart_rate']=df['hr']
